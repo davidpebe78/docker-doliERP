@@ -34,5 +34,5 @@ services:
     volumes:
         - ./erp/dolibarr/dolibarr_html:/var/www/html
         - ./erp/dolibarr/dolibarr_docs:/var/www/documents
-        - ./erp/dolibarr_custom:/var/www/html/custom
+        - ./erp/dolibarr/dolibarr_custom:/var/www/html/custom
         - ./erp/dolibarr/dolibarr_config:/var/www/html/conf
