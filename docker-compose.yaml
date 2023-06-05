@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    command: --character_set_client=utf8 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./erp/mariadb:/var/lib/mysql
+    environment:
+        - "MYSQL_DATABASE=${DB}"
+        - "MYSQL_USER=${USERDB}"
+        - "MYSQL_PASSWORD=${PASSDB}"
+        - "MYSQL_RANDOM_ROOT_PASSWORD=yes"
+
+  dolibarr:
+    image: upshift/dolibarr:latest
+    restart: always
+    depends_on:
+        - mariadb
+    ports:
+        - "8080:80"
+    environment:
+        - "DOLI_DB_HOST=mariadb"
+        - "DOLI_DB_NAME=${DB}"
+        - "DOLI_DB_USER=${USERDB}"
+        - "DOLI_DB_PASSWORD=${PASSDB}"
+        - "DOLI_ADMIN_LOGIN=${ADMINLOGIN}"
+        - "DOLI_ADMIN_PASSWORD=${ADMINPASS}"
+        - "PHP_INI_upload_max_filesize=50M"
+        - "PHP_INI_memory_limit=256M"
+        - "PHP_INI_max_execution_time=60"
+    volumes:
+        - ./erp/dolibarr/dolibarr_html:/var/www/html
+        - ./erp/dolibarr/dolibarr_docs:/var/www/documents
+        - ./erp/dolibarr_custom:/var/www/html/custom
+        - ./erp/dolibarr/dolibarr_config:/var/www/html/conf
